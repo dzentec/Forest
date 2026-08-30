@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#4F378B">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Yaremche Mom & Baby Guide</title>
+  <style>
+    :root {
+      --primary: #4F378B;
+      --primary-dark: #2A134D;
+      --secondary: #8F68B1;
+      --light-lavender: #F4EEF8;
+      --border: rgba(143, 104, 177, 0.22);
+      --text: #1D0E33;
+      --muted: #6750A4;
+      --white: #FFFFFF;
+      --glass-bg: rgba(255, 255, 255, 0.88);
+      --shadow: 0 8px 24px rgba(79, 55, 139, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", Roboto, sans-serif;
+      background: #F8F3FB;
+      color: var(--text);
+      line-height: 1.5;
+      padding-bottom: calc(90px + env(safe-area-inset-bottom));
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 12px 14px;
+    }
+
+    .app-header {
+      background: linear-gradient(135deg, #4F378B 0%, #683FB5 100%);
+      color: var(--white);
+      padding: calc(16px + env(safe-area-inset-top)) 18px 20px 18px;
+      border-radius: 28px;
+      text-align: center;
+      margin-bottom: 16px;
+      box-shadow: 0 12px 28px rgba(79, 55, 139, 0.28);
+    }
+
+    .app-header .tag {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .app-header h1 {
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: -0.4px;
+    }
+
+    .app-header p {
+      font-size: 12.5px;
+      opacity: 0.9;
+      margin-top: 2px;
+    }
+
+    .bottom-tab-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 9999;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(143, 104, 177, 0.2);
+      padding: 8px 6px calc(8px + env(safe-area-inset-bottom)) 6px;
+      box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .tab-items {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .tab-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: #7A6B94;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 4px 6px;
+      border-radius: 12px;
+      transition: all 0.2s;
+    }
+
+    .tab-btn span.icon {
+      font-size: 18px;
+      margin-bottom: 2px;
+    }
+
+    .tab-btn:active, .tab-btn:hover {
+      color: var(--primary);
+      background: rgba(79, 55, 139, 0.08);
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: 22px;
+      padding: 18px;
+      margin-bottom: 14px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      scroll-margin-top: 20px;
+    }
+
+    .card-purple {
+      background: linear-gradient(145deg, #F9F5FC 0%, #EEF6 100%);
+      border: 1px solid rgba(143, 104, 177, 0.3);
+    }
+
+    .card h2 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card h3 {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--secondary);
+      margin: 14px 0 8px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    ul li {
+      position: relative;
+      padding-left: 18px;
+      margin-bottom: 10px;
+      font-size: 13.5px;
+    }
+
+    ul li::before {
+      content: "•";
+      color: var(--secondary);
+      font-weight: bold;
+      font-size: 18px;
+      position: absolute;
+      left: 2px;
+      top: -3px;
+    }
+
+    a.map-link {
+      color: var(--primary);
+      font-weight: 700;
+      text-decoration: none;
+      background: rgba(79, 55, 139, 0.07);
+      padding: 3px 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(79, 55, 139, 0.15);
+      display: inline-block;
+      margin: 2px 0;
+    }
+
+    .phone-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--light-lavender);
+      border: 1px solid var(--border);
+      color: var(--primary);
+      text-decoration: none;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .phone-btn span.call-action {
+      background: var(--primary);
+      color: var(--white);
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+    }
+
+    .day-block {
+      background: rgba(248, 243, 251, 0.6);
+      border: 1px solid rgba(143, 104, 177, 0.25);
+      border-radius: 16px;
+      padding: 14px;
+      margin-top: 12px;
+    }
+
+    .day-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px dashed rgba(143, 104, 177, 0.3);
+    }
+
+    .day-header h3 {
+      font-size: 14.5px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .weather-badge {
+      font-size: 11px;
+      font-weight: 700;
+      background: var(--primary);
+      color: var(--white);
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    .time-slot {
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+
+    .time-slot:last-child {
+      margin-bottom: 0;
+    }
+
+    .time-pill {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      background: var(--secondary);
+      color: var(--white);
+      padding: 2px 6px;
+      border-radius: 6px;
+      margin-right: 4px;
+    }
+
+    .nap-pill {
+      background: #8E8E93;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      margin-top: 10px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    th {
+      background: var(--primary);
+      color: var(--white);
+      padding: 10px 8px;
+      font-weight: 700;
+    }
+
+    td {
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--border);
+      background: var(--white);
+    }
+
+    tr:nth-child(even) td {
+      background: rgba(244, 238, 248, 0.6);
+    }
+
+    .tip-box {
+      background: rgba(79, 55, 139, 0.05);
+      border-left: 3px solid var(--primary);
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 12.5px;
+      margin-top: 10px;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 11.5px;
+      color: var(--muted);
+      margin-top: 24px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Header -->
+    <header class="app-header">
+      <span class="tag">📱 iPhone Violet Edition</span>
+      <h1>Yaremche Mom & Baby</h1>
+      <p>Отель FoRest | 1–7 сентября 2026</p>
+    </header>
+
+    <!-- EXPANDED COFFEE & FOOD SECTION -->
+    <section id="coffee" class="card">
+      <h2>☕ Кофе, Завтраки & Гуцульская еда</h2>
+
+      <h3>🥐 Красивые завтраки & Спешелти-кофе:</h3>
+      <ul>
+        <li>
+          <a href="https://www.google.com/maps/search/?api=1&query=Barberry+Яремче" target="_blank" class="map-link">☕ «Barberry» (ул. Ивасюка, 3)</a><br>
+          <em>Главное место для мам!</em> Идеальный спешелти-кофе (флэт уайт, латте), ягодные сырники, круассаны с лососем и авокадо. Внутри — закрытая детская игровая комната.
+        </li>
+        <li>
+          <a href="https://www.google.com/maps/search/?api=1&query=Красна+Садиба+Яремче" target="_blank" class="map-link">🥐 «Красна Садиба» (ул. Ивасюка, 6)</a><br>
+          Эстетичные завтраки на летней террасе: яйца пашот с голландским соусом, брускетты, френч-тосты и отличный заварной кофе.
+        </li>
+        <li>
+          <a href="https://www.google.com/maps/search/?api=1&query=Смак+Дня+Яремче" target="_blank" class="map-link">🍰 «Смак Дня» (ул. Свободы, 264)</a><br>
+          Пышные карпатские сырники с соусом из дикой черники, бельгийские вафли с ягодами и ароматный латте.
+        </li>
+        <li>
+          <a href="https://www.google.com/maps/search/?api=1&query=Gedzo+Park+Yaremche" target="_blank" class="map-link">🧙‍♂️ Кофейня в «Ґедзьо Парке»</a><br>
+          Авторский раф-кофе, горячее какао с зефирками и идеальная сказочная атмосфера в стиле домиков хоббитов.
+        </li>
+      </ul>
+
+      <h3>🍲 Недорогая & Аутентичная Гуцульская кухня:</h3>
+      <ul>
+        <li>
+          <a href="https://www.google.com/maps/search/?api=1&query=Кафе+Орхидея+Яремче+Галицька" target="_blank" class="map-link">📍 «Орхидея» (ул. Галицкая, 53)</a><br>
+          <em>Всего 3 мин от FoRest!</em> Уютное место с честной домашней кухней: лёгкие куриные супчики для ребёнка, карпатский борщ, деруны.
+        </li>
+        <li>
+          <a href="https://www.google.com/maps/search/?api=1&query=Колиба+Гражда+Яремче" target="_blank" class="map-link">🪵 Колыба «Гражда» (ул. Свободы, 280)</a><br>
+          Настоящий костёр по центру зала: традиционный банош с брынзой и шкварками, наваристая юшка из белых грибов, речная форель.
+        </li>
+        <li>
+          <a href="https://www.google.com/maps/search/?api=1&query=Гуцульщина+Яремче" target="_blank" class="map-link">🏛️ Ресторан-музей «Гуцульщина»</a><br>
+          Архитектурный шедевр без единого гвоздя. Местные деликатесы и дегустация черничной наливки (<em>Яфінівка</em>) для мамы.
+        </li>
+      </ul>
+    </section>
+
+    <!-- Shops Section -->
+    <section id="shops" class="card">
+      <h2>🛒 Магазины & Аптеки (Пешком до 5 мин)</h2>
+      <p style="font-size: 12px; color: var(--muted); margin-bottom: 8px;">Все заведения расположены в радиусе 250–500 м от FoRest:</p>
+      
+      <ul>
+        <li><a href="https://www.google.com/maps/search/?api=1&query=Родинний+Яремче+Галицька" target="_blank" class="map-link">🛒 «Родинний» (ул. Галицкая, 1а)</a> — ~300 м (3 мин). Творожки, молоко, соки, свежий хлеб.</li>
+        <li><a href="https://www.google.com/maps/search/?api=1&query=Копійочка+Яремче+Галицька" target="_blank" class="map-link">🛍️ «Копійочка» (ул. Галицкая, 1)</a> — ~350 м (4 мин). Подгузники, салфетки, игрушки.</li>
+        <li><a href="https://www.google.com/maps/search/?api=1&query=Євротовари+Яремче+Галицька" target="_blank" class="map-link">🧀 «Євротовари» (ул. Галицкая, 1а)</a> — ~300 м (3 мин). Европейские сыры, паста и детский шоколад.</li>
+        <li><a href="https://www.google.com/maps/search/?api=1&query=АТБ+Маркет+Яремче" target="_blank" class="map-link">🏬 «АТБ-Маркет» 24/7 (ул. Свободы, 24а)</a> — ~500 м (5 мин). Круглосуточный супермаркет, детский отдел.</li>
+        <li><a href="https://www.google.com/maps/search/?api=1&query=Аптека+Подорожник+Яремче+Свободи" target="_blank" class="map-link">💊 Аптека (ул. Свободы)</a> — ~450 м (5 мин). Подгузники, смеси, детская косметика.</li>
+        <li><a href="https://www.google.com/maps/search/?api=1&query=Ринок+Галицька+Яремче" target="_blank" class="map-link">🍇 Продуктовый рынок</a> — ~350 м (4 мин). Ягоды, брынза, фрукты.</li>
+      </ul>
+    </section>
+
+    <!-- Itinerary Section -->
+    <section id="itinerary" class="card">
+      <h2>🗓️ План отдыха по дням</h2>
+
+      <div class="day-block">
+        <div class="day-header">
+          <h3>Вт, 1 сентября</h3>
+          <span class="weather-badge">☀️ +23 / +12 °C</span>
+        </div>
+        <div class="time-slot">
+          <span class="time-pill">Утро 10:00–12:30</span>
+          Прогулка с коляской в <a href="https://www.google.com/maps/search/?api=1&query=Центральний+парк+Яремче" target="_blank" class="map-link">🌳 Центральный парк</a> (~500 м / 5 мин пешком).
+        </div>
+        <div class="time-slot">
+          <span class="time-pill nap-pill">Сон 13:30–15:30</span>
+          Дневной сон в номере FoRest.
+        </div>
+        <div class="time-slot">
+          <span class="time-pill">Вечер 16:30–19:00</span>
+          Ужин в ресторане отеля FoRest.
+        </div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-header">
+          <h3>Ср, 2 сентября</h3>
+          <span class="weather-badge">🌤️ +22 / +11 °C</span>
+        </div>
+        <div class="time-slot">
+          <span class="time-pill">Утро 10:00–12:30</span>
+          Поход в <a href="https://www.google.com/maps/search/?api=1&query=Вольєрне+господарство+Яремче" target="_blank" class="map-link">🦌 Вольерное хозяйство</a>. Кормление оленей с рук.
+        </div>
+        <div class="time-slot">
+          <span class="time-pill nap-pill">Сон 13:30–15:30</span>
+          Дневной сон в FoRest.
+        </div>
+        <div class="time-slot">
+          <span class="time-pill">Вечер 16:30–19:00</span>
+          Прогулка в <a href="https://www.google.com/maps/search/?api=1&query=Карпати+в+мініатюрі+Яремче" target="_blank" class="map-link">🚂 «Карпаты в миниатюре»</a>.
+        </div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-header">
+          <h3>Чт, 3 сентября</h3>
+          <span class="weather-badge">🌧️ +19 / +11 °C</span>
+        </div>
+        <div class="time-slot">
+          <span class="time-pill">Утро 10:00–12:30</span>
+          Завтрак & кофе в <a href="https://www.google.com/maps/search/?api=1&query=Barberry+Яремче" target="_blank" class="map-link">☕ Barberry</a> (детская игровая комната).
+        </div>
+        <div class="time-slot">
+          <span class="time-pill nap-pill">Сон 13:30–15:30</span>
+          Дневной сон в FoRest.
+        </div>
+        <div class="time-slot">
+          <span class="time-pill">Вечер 16:00–18:30</span>
+          <a href="https://www.google.com/maps/search/?api=1&query=Музей+етнографії+та+екології+Карпат+Яремче" target="_blank" class="map-link">🏛️ Музей этнографии</a> + тёплый бассейн FoRest.
+        </div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-header">
+          <h3>Пт, 4 сентября</h3>
+          <span class="weather-badge">🌿 +19 / +11 °C</span>
+        </div>
+        <div class="time-slot">
+          <span class="time-pill">Утро 10:00–12:30</span>
+          Река Прут и <a href="https://www.google.com/maps/search/?api=1&query=Скеля+Слон+Яремче" target="_blank" class="map-link">⛰️ скала «Слон»</a>.
+        </div>
+        <div class="time-slot">
+          <span class="time-pill nap-pill">Сон 13:30–15:30</span>
+          Дневной сон в FoRest.
+        </div>
+        <div class="time-slot">
+          <span class="time-pill">Вечер 16:30–19:00</span>
+          Обед в <a href="https://www.google.com/maps/search/?api=1&query=Кафе+Орхидея+Яремче+Галицька" target="_blank" class="map-link">📍 кафе «Орхидея»</a> (3 мин от FoRest).
+        </div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-header">
+          <h3>Сб, 5 сентября</h3>
+          <span class="weather-badge">☀️ +20 / +13 °C</span>
+        </div>
+        <div class="time-slot">
+          <span class="time-pill">Утро 10:00–12:30</span>
+          Такси (5 мин) в <a href="https://www.google.com/maps/search/?api=1&query=Gedzo+Park+Yaremche" target="_blank" class="map-link">🧙‍♂️ Ґедзьо Парк Легенд</a>.
+        </div>
+        <div class="time-slot">
+          <span class="time-pill nap-pill">Сон 13:30–15:30</span>
+          Дневной сон в FoRest.
+        </div>
+        <div class="time-slot">
+          <span class="time-pill">Вечер 17:00–19:00</span>
+          Карпатский чан на дровах прямо в FoRest.
+        </div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-header">
+          <h3>Вс, 6 сентября</h3>
+          <span class="weather-badge">☀️ +21 / +12 °C</span>
+        </div>
+        <div class="time-slot">
+          <span class="time-pill">Утро 10:00–12:30</span>
+          Уточки + завтрак в <a href="https://www.google.com/maps/search/?api=1&query=Смак+Дня+Яремче" target="_blank" class="map-link">🍰 «Смак Дня»</a> (вафли и сырники).
+        </div>
+        <div class="time-slot">
+          <span class="time-pill nap-pill">Сон 13:30–15:30</span>
+          Дневной сон в FoRest.
+        </div>
+        <div class="time-slot">
+          <span class="time-pill">Вечер 16:30–19:00</span>
+          Ужин в <a href="https://www.google.com/maps/search/?api=1&query=Колиба+Гражда+Яремче" target="_blank" class="map-link">🪵 колыбе «Гражда»</a>.
+        </div>
+      </div>
+
+      <div class="day-block">
+        <div class="day-header">
+          <h3>Пн, 7 сентября</h3>
+          <span class="weather-badge">☀️ +23 / +12 °C</span>
+        </div>
+        <div class="time-slot">
+          <span class="time-pill">Утро 10:00–12:30</span>
+          <a href="https://www.google.com/maps/search/?api=1&query=Водоспад+Пробій+Яремче" target="_blank" class="map-link">🌊 Водопад Пробий</a> и <a href="https://www.google.com/maps/search/?api=1&query=Сувенірний+ринок+Яремче" target="_blank" class="map-link">🎁 Сувенирный рынок</a>.
+        </div>
+        <div class="time-slot">
+          <span class="time-pill">После обеда</span>
+          Финальное фото на балконе FoRest, выезд.
+        </div>
+      </div>
+    </section>
+
+    <!-- Hotel Section -->
+    <section id="hotel" class="card">
+      <h2>🏨 Отель FoRest</h2>
+      <p>Локация: <a href="https://www.google.com/maps/search/?api=1&query=FoRest+Yaremche" target="_blank" class="map-link">📍 FoRest (ул. Галицкая, 11/1)</a>. Тихое место в 500 м от центра.</p>
+      <br>
+      <ul>
+        <li><strong>🏊‍♀️ Тёплый бассейн & Сауна:</strong> Комфорт в любую погоду.</li>
+        <li><strong>🛁 Карпатский чан:</strong> Нагревается под вашу температуру.</li>
+        <li><strong>☕ Панорамный балкон:</strong> Вид на туманные горы.</li>
+        <li><strong>🍽️ Ресторан:</strong> Детские стульчики, каши, сырники.</li>
+      </ul>
+    </section>
+
+    <!-- Taxi Section -->
+    <section id="taxi" class="card card-purple">
+      <h2>🚕 Такси в Яремче</h2>
+      <p style="font-size: 12.5px; margin-bottom: 10px;"><strong>Приложения:</strong> Uklon или Opti (код 579).</p>
+      
+      <p style="font-size: 12px; font-weight: 700; margin-bottom: 6px; color: var(--muted);">ВЫЗОВ В ОДИН КЛИК:</p>
+
+      <a href="tel:+380672524445" class="phone-btn">
+        <span>🚖 Такси «Яремче+»</span>
+        <span class="call-action">📞 Вызов</span>
+      </a>
+
+      <a href="tel:+380985113262" class="phone-btn">
+        <span>🚖 Такси «Макс» (24/7)</span>
+        <span class="call-action">📞 Вызов</span>
+      </a>
+
+      <a href="tel:+380679363141" class="phone-btn">
+        <span>🚖 Такси «Яремче»</span>
+        <span class="call-action">📞 Вызов</span>
+      </a>
+
+      <div class="tip-box">
+        💡 <strong>Совет:</strong> Указывайте водителю: «Складная коляска». Поездка до Ґедзьо Парка — 5–7 минут.
+      </div>
+    </section>
+
+    <!-- Weather Section -->
+    <section id="weather" class="card card-purple">
+      <h2>🌤️ Погода (1–7 сентября)</h2>
+      <p style="font-size: 12.5px;">Тёплое бабье лето (+19...+23 °C днём).</p>
+      
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Дата</th>
+              <th>Темп.</th>
+              <th>Дождь</th>
+              <th>План</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>1 сен</strong></td>
+              <td>+23/+12</td>
+              <td>45%</td>
+              <td>🧸 Прогулка</td>
+            </tr>
+            <tr>
+              <td><strong>2 сен</strong></td>
+              <td>+22/+11</td>
+              <td>20%</td>
+              <td>🦌 Вольеры</td>
+            </tr>
+            <tr>
+              <td><strong>3 сен</strong></td>
+              <td>+19/+11</td>
+              <td>55%</td>
+              <td>🍦 Бассейн</td>
+            </tr>
+            <tr>
+              <td><strong>4 сен</strong></td>
+              <td>+19/+11</td>
+              <td>15%</td>
+              <td>🎨 SPA & Сон</td>
+            </tr>
+            <tr>
+              <td><strong>5 сен</strong></td>
+              <td>+20/+13</td>
+              <td>0%</td>
+              <td>🛁 Чан</td>
+            </tr>
+            <tr>
+              <td><strong>6 сен</strong></td>
+              <td>+21/+12</td>
+              <td>0%</td>
+              <td>🦆 Уточки</td>
+            </tr>
+            <tr>
+              <td><strong>7 сен</strong></td>
+              <td>+23/+12</td>
+              <td>20%</td>
+              <td>🎁 Сувениры</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- First Aid Kit -->
+    <section id="firstaid" class="card card-purple">
+      <h2>💊 Детская Аптечка (3 года)</h2>
+      <ul>
+        <li><strong>Жаропонижающее:</strong> Нурофен / Панадол + термометр.</li>
+        <li><strong>Животик:</strong> Смекта / Атоксил бэби, Энтерожермина.</li>
+        <li><strong>Нос & Горло:</strong> Аква Марис, Назол Бэби, Мирамистин.</li>
+        <li><strong>Ранки & Кожа:</strong> Пластырь, Фенистил, Бепантен.</li>
+      </ul>
+    </section>
+
+    <footer>
+      <p>✨ Отличного отдыха в отеле FoRest! ✨</p>
+    </footer>
+
+  </div>
+
+  <!-- Bottom Navigation Bar -->
+  <nav class="bottom-tab-bar">
+    <div class="tab-items">
+      <a href="#coffee" class="tab-btn">
+        <span class="icon">☕</span>
+        <span>Завтраки</span>
+      </a>
+      <a href="#itinerary" class="tab-btn">
+        <span class="icon">🗓️</span>
+        <span>План</span>
+      </a>
+      <a href="#shops" class="tab-btn">
+        <span class="icon">🛒</span>
+        <span>Маркет</span>
+      </a>
+      <a href="#hotel" class="tab-btn">
+        <span class="icon">🏨</span>
+        <span>FoRest</span>
+      </a>
+      <a href="#taxi" class="tab-btn">
+        <span class="icon">🚕</span>
+        <span>Такси</span>
+      </a>
+      <a href="#weather" class="tab-btn">
+        <span class="icon">🌤️</span>
+        <span>Погода</span>
+      </a>
+    </div>
+  </nav>
+
+</body>
+</html>
