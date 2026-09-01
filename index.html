@@ -596,13 +596,13 @@
       </div>
     </section>
 
-    <!-- WEATHER SECTION (RESTRUCTURED FOR 1-5 SEPT) -->
+<!-- WEATHER SECTION WITH LIVE API AUTO-UPDATE ON LOAD -->
     <section id="weather" class="card card-purple">
       <h2>🌤️ Погода в Яремче (1–5 сентября 2026)</h2>
-      <p style="font-size: 12.5px;">Комфортное карпатское «бабье лето» (+20...+23 °C днём, умеренные ночи +11...+12 °C). Небольшой кратковременный дождик вероятен 3 сентября.</p>
+      <p style="font-size: 12.5px; margin-bottom: 10px;">Комфортное карпатское «бабье лето» (+20...+23 °C днём, умеренные ночи +11...+12 °C). Кратковременные осадки отслеживаются метеослужбой.</p>
       
       <div class="table-wrap">
-        <table>
+        <table id="weather-table">
           <thead>
             <tr>
               <th>Дата</th>
@@ -614,38 +614,109 @@
           <tbody>
             <tr>
               <td><strong>Вт, 1 сен</strong></td>
-              <td>+22 / +12 °C</td>
-              <td>15% (перем. облачность)</td>
+              <td class="temp">+22 / +12 °C</td>
+              <td class="precip">15% (перем. облачность)</td>
               <td>🧸 Утренняя прогулка с коляской в парк</td>
             </tr>
             <tr>
               <td><strong>Ср, 2 сен</strong></td>
-              <td>+23 / +11 °C</td>
-              <td>10% (солнечно)</td>
+              <td class="temp">+23 / +11 °C</td>
+              <td class="precip">10% (солнечно)</td>
               <td>🦌 Вольеры с оленями & «Карпаты в миниатюре»</td>
             </tr>
             <tr>
               <td><strong>Чт, 3 сен</strong></td>
-              <td>+20 / +12 °C</td>
-              <td>40% (легкий дождь)</td>
+              <td class="temp">+20 / +12 °C</td>
+              <td class="precip">40% (легкий дождь)</td>
               <td>🍦 Какао в Barberry + Тёплый бассейн FoRest</td>
             </tr>
             <tr>
               <td><strong>Пт, 4 сен</strong></td>
-              <td>+21 / +11 °C</td>
-              <td>10% (ясно)</td>
+              <td class="temp">+21 / +11 °C</td>
+              <td class="precip">10% (ясно)</td>
               <td>🧙‍♂️ Ґедзьо Парк + Чан на дровах в FoRest</td>
             </tr>
             <tr>
               <td><strong>Сб, 5 сен</strong></td>
-              <td>+22 / +12 °C</td>
-              <td>5% (ясно и сухо)</td>
+              <td class="temp">+22 / +12 °C</td>
+              <td class="precip">5% (ясно и сухо)</td>
               <td>🎁 Водопад Пробий & Сувенирный рынок</td>
             </tr>
           </tbody>
         </table>
       </div>
+
+      <!-- Кнопка на всю ширину фрейма под таблицей -->
+      <button id="update-weather-btn" onclick="fetchYaremcheWeather()" style="width: 100%; margin-top: 12px; background: var(--primary); color: var(--white); border: none; padding: 12px; border-radius: 14px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 12px rgba(79, 55, 139, 0.25); transition: all 0.2s;">
+        🔄 Обновить прогноз погоды
+      </button>
     </section>
+
+<!-- JS SCRIPT FOR LIVE WEATHER AUTO-UPDATE (TABLE + DAILY ITINERARY) -->
+<script>
+  async function fetchYaremcheWeather() {
+    const btn = document.getElementById('update-weather-btn');
+    if (btn) {
+      btn.innerText = '⏳ Загрузка прогноза...';
+      btn.style.opacity = '0.7';
+    }
+
+    try {
+      const url = 'https://api.open-meteo.com/v1/forecast?latitude=48.4527&longitude=24.5538&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Europe%2FKiev';
+      const response = await fetch(url);
+      const data = await response.json();
+
+      if (data && data.daily) {
+        const tempsMax = data.daily.temperature_2m_max;
+        const tempsMin = data.daily.temperature_2m_min;
+        const precipProb = data.daily.precipitation_probability_max;
+
+        // 1. Обновление таблицы в блоке "Погода"
+        const rows = document.querySelectorAll('#weather-table tbody tr');
+        rows.forEach((row, idx) => {
+          if (tempsMax[idx] !== undefined) {
+            const max = Math.round(tempsMax[idx]);
+            const min = Math.round(tempsMin[idx]);
+            const prob = precipProb[idx] !== undefined ? precipProb[idx] : 0;
+            const stateText = prob > 50 ? 'дождь' : (prob > 20 ? 'облачно' : 'ясно');
+
+            row.querySelector('.temp').textContent = `+${max} / +${min} °C`;
+            row.querySelector('.precip').textContent = `${prob}% (${stateText})`;
+          }
+        });
+
+        // 2. Обновление бэйджей в блоке "Подробный план отдыха по дням"
+        const badges = document.querySelectorAll('#itinerary .weather-badge');
+        badges.forEach((badge, idx) => {
+          if (tempsMax[idx] !== undefined) {
+            const max = Math.round(tempsMax[idx]);
+            const min = Math.round(tempsMin[idx]);
+            const prob = precipProb[idx] !== undefined ? precipProb[idx] : 0;
+            const icon = prob > 50 ? '🌧️' : (prob > 20 ? '🌦️' : '☀️');
+
+            badge.textContent = `${icon} +${max} / +${min} °C`;
+          }
+        });
+
+        if (btn) btn.innerText = '✅ Прогноз обновлён';
+      } else {
+        throw new Error('No data');
+      }
+    } catch (e) {
+      if (btn) btn.innerText = '❌ Ошибка обновления';
+    }
+
+    if (btn) {
+      setTimeout(() => {
+        btn.innerText = '🔄 Обновить прогноз погоды';
+        btn.style.opacity = '1';
+      }, 2500);
+    }
+  }
+
+  // Автоматический запуск при загрузке или перезагрузке страницы
+  document.addEventListener('DOMContentLoaded', fetchYaremcheWeather);
+</script>
 
     <!-- FIRST AID KIT SECTION -->
     <section id="firstaid" class="card card-purple">
